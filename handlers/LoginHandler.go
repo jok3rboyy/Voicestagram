@@ -5,9 +5,15 @@ import (
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"net/http"
 )
 
-func LoginHandler(db *gorm.DB) echo.HandlerFunc {
+func LoginPageRender(e echo.Context) error {
+
+	return e.Render(http.StatusOK, "login", echo.Map{"status": "Plopppir"})
+}
+
+func LoginChecker(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")

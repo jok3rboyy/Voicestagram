@@ -5,6 +5,7 @@ import (
 	"github.com/foolin/goview/supports/echoview-v4"
 	"github.com/jok3rboyy/VoiceStagram1/handlers"
 	"github.com/jok3rboyy/VoiceStagram1/repositories"
+
 	//"github.com/jok3rboyy/VoiceStagram1/types"
 	"github.com/labstack/echo/v4"
 )
@@ -24,10 +25,10 @@ func main() {
 		Master:       "/master",
 	})
 
-	e.GET("/login", handlers.LoginHandler)
-	//e.POST("/login", handlers.LoginChecker)
+	e.GET("/login", handlers.LoginPageRender)
+	//e.POST("/login", handlesr.LoginChecker)
 	e.GET("/", handlers.HomeHandler)
-	//	e.GET("/makePost", handlers.Gotopost)
+	//e.GET("/makePost", handlers.Gotopost)
 	//e.POST("/makePost", handlers.Uploadpost)
 	e.Logger.Fatal(e.Start(":1324"))
 
