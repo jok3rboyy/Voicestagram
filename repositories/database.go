@@ -1,8 +1,7 @@
-package Repositories
+package repositories
 
 import (
-	"./types"
-
+	"github.com/jok3rboyy/VoiceStagram1/types"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -21,5 +20,4 @@ func DatabaseOpen() {
 	db.AutoMigrate(&types.Post{}, &types.User{})
 
 	Database = db
-
 }

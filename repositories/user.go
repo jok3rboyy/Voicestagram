@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"Voicestagram/types"
+	"github.com/jok3rboyy/VoiceStagram1/types"
 	"gorm.io/gorm"
 )
 

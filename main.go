@@ -1,11 +1,11 @@
 package main
 
 import (
-	"./Repositories"
-	"./handlers"
-	"./types"
 	"github.com/foolin/goview"
 	"github.com/foolin/goview/supports/echoview-v4"
+	"github.com/jok3rboyy/VoiceStagram1/handlers"
+	"github.com/jok3rboyy/VoiceStagram1/repositories"
+	//"github.com/jok3rboyy/VoiceStagram1/types"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,7 +15,7 @@ func main() {
 
 	e.Static("/Foto's", "Foto's")
 
-	Repositories.DatabaseOpen()
+	repositories.DatabaseOpen()
 
 	e.Renderer = echoview.New(goview.Config{
 		Root:         "templates",
@@ -24,12 +24,11 @@ func main() {
 		Master:       "/master",
 	})
 
-	e.GET("/login", handler.LoginPageRender)
-	e.POST("/login", handler.LoginChecker)
-	e.GET("/", handler.HomeHandler)
-	e.GET("/group", handler.GroupHandler)
-	e.GET("/makePost", handler.Gotopost)
-	e.POST("/makePost", handler.Uploadpost)
+	e.GET("/login", handlers.LoginHandler)
+	//e.POST("/login", handlers.LoginChecker)
+	e.GET("/", handlers.HomeHandler)
+	//	e.GET("/makePost", handlers.Gotopost)
+	//e.POST("/makePost", handlers.Uploadpost)
 	e.Logger.Fatal(e.Start(":1324"))
 
 	// func main() {

@@ -1,4 +1,9 @@
-module github.com/twanm/Voicestagram
+module github.com/jok3rboyy/VoiceStagram1
+
+go 1.19
+
+
+
 require github.com/joho/godotenv v1.5.1
 
 require (
@@ -48,4 +53,3 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 )
-go 1.19

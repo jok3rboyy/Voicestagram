@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"github.com/jok3rboyy/VoiceStagram1/types"
 	"github.com/labstack/echo/v4"
-	"github.com/twanm/VoiceStagram/types"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
