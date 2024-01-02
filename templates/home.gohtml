@@ -1,36 +1,10 @@
 {{template "header.gohtml" .}}
 {{template "nav.gohtml" . }}
 <h2>Welcome to SVS</h2>
-{{if .Admin}}
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Recente Modules</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ range .Modules }}
-                    <tr>
-                        <td><a href="/modules/{{ .ID }}">{{ .Name }}</a></td>
-                    </tr>
-                {{ end }}
-            </tbody>
-        </table>
-        <br>
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Recente Cijfers</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{ range .GradeResults }}
-                    <tr>
-                        <td><a href="/modules/{{ .ModuleID }}">{{if not .Absent}}{{.Value}}{{else}}ABS{{end}}</a></td>
-                    </tr>
-                {{ end }}
-            </tbody>
-        </table>
+{{if .User}}
+    <p>Hi {{.User.FirstName}} {{.User.LastName}}</p>
+{{else}}
+    <p>Hi Guest</p>
 {{end}}	
 {{template "footer.gohtml" .}}
 
