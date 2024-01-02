@@ -24,7 +24,7 @@ func main() {
 		Master:       "/master",
 	})
 
-	e.POST("/login", handlers.LoginHandler(repositories.Database))
+	e.GET("/login", handlers.LoginHandler)
 	//e.POST("/login", handlers.LoginChecker)
 	e.GET("/", handlers.HomeHandler)
 	//	e.GET("/makePost", handlers.Gotopost)
