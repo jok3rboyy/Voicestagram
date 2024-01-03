@@ -4,6 +4,6 @@ import "gorm.io/gorm"
 
 type Post struct {
 	gorm.Model
-	Username uint
-	Message  string `json:"message"`
+	Username     string
+	VoiceMessage string
 }

@@ -2,8 +2,6 @@ module github.com/jok3rboyy/VoiceStagram1
 
 go 1.19
 
-
-
 require github.com/joho/godotenv v1.5.1
 
 require (
@@ -20,9 +18,11 @@ require (
 	github.com/glebarez/go-sqlite v1.20.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.15 // indirect
+	github.com/labstack/echo-contrib v0.15.0 // indirect
 	github.com/labstack/echo/v4 v4.11.3 // indirect
 	github.com/labstack/gommon v0.4.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

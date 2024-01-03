@@ -20,13 +20,12 @@ func main() {
 
 	e.Renderer = echoview.New(goview.Config{
 		Root:         "templates",
-		Extension:    ".html",
+		Extension:    ".gohtml",
 		DisableCache: true,
 		Master:       "/master",
 	})
-
-	e.GET("/login", handlers.LoginPageRender)
-	//e.POST("/login", handlesr.LoginChecker)
+	e.GET("/login", handlers.LoginPageRender)                            // Render the login page when /login is accessed
+	e.POST("/login/check", handlers.LoginChecker(repositories.Database)) // Login checker (for form submission)
 	e.GET("/", handlers.HomeHandler)
 	//e.GET("/makePost", handlers.Gotopost)
 	//e.POST("/makePost", handlers.Uploadpost)
