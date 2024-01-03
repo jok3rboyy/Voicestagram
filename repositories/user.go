@@ -1,40 +1,29 @@
+// repositories/user.go
+
 package repositories
 
 import (
-	"github.com/jok3rboyy/VoiceStagram1/types"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
+	"github.com/jok3rboyy/VoiceStagram1/types"
 )
 
-type UserRepository struct {
-	db *gorm.DB
-}
-
-func NewUserRepository(db *gorm.DB) *UserRepository {
-	return &UserRepository{db: db}
-}
-
-// FindUserByID retrieves a user by ID from the database
-func (repo *UserRepository) FindUserByID(userID uint) (*types.User, error) {
-	var user types.User
-	result := repo.db.First(&user, userID)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &user, nil
-}
-
-// FindUserByUsername retrieves a user by username from the database
-func (repo *UserRepository) FindUserByUsername(username string) (*types.User, error) {
-	var user types.User
-	result := repo.db.Where("username = ?", username).First(&user)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &user, nil
-}
-
 // CreateUser creates a new user in the database
-func (repo *UserRepository) CreateUser(user *types.User) error {
-	result := repo.db.Create(user)
-	return result.Error
+func CreateUser(db *gorm.DB, user *types.User, password string) error {
+	// Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	// Set the hashed password in the user object
+	user.Password = string(hashedPassword)
+
+	// Save the user to the database
+	if err := db.Create(user).Error; err != nil {
+		return err
+	}
+
+	return nil
 }

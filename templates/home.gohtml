@@ -1,36 +1,35 @@
 <html>
-    <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/public/pico.classless.min.css">
-    </head>
-    <body>
-<main class="container">
-<nav>
-    <ul>
-        <li><strong>Voicestagram</strong></li>
-    </ul>
-    <ul>
-            <li><a href="/">Home</a></li>
-    </ul>
-</nav>
+    <link rel="stylesheet" href="/public/pico.classless.min.css">
+</head>
+<body>
+    <main class="container">
+        <nav>
+            <ul>
+                <li><strong>Voicestagram</strong></li>
+            </ul>
+            <ul>
+                <li><a href="/">Home</a></li>
+                {{ if not .IsLoggedIn }}
+                    <li><a href="login">Login</a></li>
+                    <li><a href="register">register</a></li>
+                {{ end }}
+            </ul>
+        </nav>
+
+        {{ if not .IsLoggedIn }}
+            <h2>Welcome, zo te zien ben je niet ingelogd</h2>
+        {{ end }}
+
+   {{ range .Voicemessages }}
+          
+    {{ end }}
 
 
-<h2>fakka bro!</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-<hr>
-<span>© Voicestagram inc @Meurs</span>
-</main>
-</body>
-</html>
+        <hr>
+        <span>© Voicestagram inc @Meurs</span>
+        </main>
+        </body>
+        </html>

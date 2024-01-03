@@ -1,69 +1,63 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
-	"time"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/sessions"
 	"github.com/jok3rboyy/VoiceStagram1/types"
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func LoginPageRender(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.gohtml", nil)
 }
-func LoginChecker(db *gorm.DB) echo.HandlerFunc {
+
+// LoginChecker handles user login
+func LoginChecker(db *gorm.DB, store *sessions.CookieStore) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")
 
-		// pak user from the database
+		// Retrieve user from the database
 		var user types.User
 		result := db.Where("username = ?", username).First(&user)
 		if result.Error != nil {
-
-			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid username ")
+			fmt.Println("Error retrieving user:", result.Error)
+			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid username or password")
 		}
 
-		if user.Password != password {
-
-			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid password")
+		// Check if the password matches
+		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+		if err != nil {
+			fmt.Println("Password comparison error:", err)
+			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid username or password")
 		}
 
-		sessionToken := "example-session-token"
+		// Generate a session token
+		sessionToken := uuid.New().String()
 
-		cookie := new(http.Cookie)
-		cookie.Name = "session"
-		cookie.Value = sessionToken
-		cookie.Expires = time.Now().Add(24 * time.Hour)
-		c.SetCookie(cookie)
+		// Get the session
+		session, err := store.Get(c.Request(), "session")
+		if err != nil {
+			fmt.Println("Error retrieving session:", err)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving session")
+		}
 
+		// Set the session token in the session
+		session.Values["token"] = sessionToken
+		session.Values["Username"] = username
+
+		// Save the session
+		if err := session.Save(c.Request(), c.Response().Writer); err != nil {
+			fmt.Println("Error saving session:", err)
+			return echo.NewHTTPError(http.StatusInternalServerError, "Error saving session")
+		}
+
+		// Redirect to the home page
 		return c.Redirect(http.StatusSeeOther, "/")
 	}
 }
-
-// 	return e.Render(http.StatusOK, "login", echo.Map{"status": "Plopppir"})
-// }
-
-// func LoginChecker(db *gorm.DB) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		username := c.FormValue("username")
-// 		password := c.FormValue("password")
-
-// 		// Zoek de gebruiker in de database
-// 		var user types.User
-// 		result := db.Where("username = ?", username).First(&user)
-// 		if result.Error != nil {
-// 			return echo.NewHTTPError(401, "Onjuiste gebruikersnaam of wachtwoord")
-// 		}
-
-// 		// Controleer het wachtwoord
-// 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-// 		if err != nil {
-// 			return echo.NewHTTPError(401, "Onjuiste gebruikersnaam of wachtwoord")
-// 		}
-
-// 		// Inloggen geslaagd
-// 		return c.String(200, "Inloggen geslaagd")
-// 	}
-// }
