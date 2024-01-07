@@ -16,15 +16,27 @@
                     <li><a href="login">Login</a></li>
                     <li><a href="register">register</a></li>
                 {{ end }}
+                {{ if .IsLoggedIn }}
+                <li><a href="createpost">Create Post</a></li>
+                <br>
+                <br>
+                    <li><a href="logout">Logout</a></li>
+                {{ end }}
             </ul>
         </nav>
 
         {{ if not .IsLoggedIn }}
-            <h2>Welcome, zo te zien ben je niet ingelogd</h2>
+            <h2>welkom, zo te zien ben je niet ingelogd</h2>
         {{ end }}
 
-   {{ range .Voicemessages }}
-          
+
+        {{ if .IsLoggedIn }}
+        <h2>hey! {{ .Username }} wat leuk dat je er bent :] </h2>
+        {{ range .Voicemessages }}
+        <div>
+            <p>Voice Message: <audio controls><source src="{{ .VoiceMessage }}" type="audio/wav"></audio></p>
+        </div>
+    {{ end }}
     {{ end }}
 
 
@@ -33,3 +45,4 @@
         </main>
         </body>
         </html>
+        

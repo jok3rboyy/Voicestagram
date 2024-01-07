@@ -15,24 +15,24 @@ func DatabaseOpen() {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		// Print the error and exit the application if the database connection fails
+		// Print error en stop de applicatie als ie niet werkt
 		fmt.Println("Error connecting to the database:", err)
 		panic("Failed to connect to the database")
 	}
 
-	// Perform database migrations or other setup if needed
+	// migreer database
 	db.AutoMigrate(&types.Post{}, &types.User{})
 
-	// Assign the database connection to the global variable
+	// zorg dat de database een eigen variabele krijgt
 	Database = db
 
-	// Print a message indicating a successful database connection
-	fmt.Println("Connected to the database")
+	// Print dat hij het doet
+	fmt.Println("Connected to database")
 
-	// Check the connection health
+	// Check of er iets geselecteerd kan worden uit de database
 	if err := db.Exec("SELECT 1").Error; err != nil {
 		fmt.Println("Error checking the database connection:", err)
 		panic("Failed to check the database connection")
 	}
-	fmt.Println("Database connection is healthy")
+	fmt.Println("Database connection is working")
 }

@@ -1,5 +1,3 @@
-// repositories/user.go
-
 package repositories
 
 import (
@@ -9,18 +7,18 @@ import (
 	"github.com/jok3rboyy/VoiceStagram1/types"
 )
 
-// CreateUser creates a new user in the database
+// CreateUser maakt een nieuwe gebruiker aan in de database.
 func CreateUser(db *gorm.DB, user *types.User, password string) error {
-	// Hash the password
+	// Hash de password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 
-	// Set the hashed password in the user object
+	// Sla de gehashte password op in de user
 	user.Password = string(hashedPassword)
 
-	// Save the user to the database
+	// Sla de user op in de database
 	if err := db.Create(user).Error; err != nil {
 		return err
 	}

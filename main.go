@@ -23,6 +23,8 @@ func main() {
 	})
 
 	// Middleware to inject the database connection into the Echo context
+	e.Static("/uploads", "C:\\Users\\twanm\\reposSchool\\Voicestagram\\Voicemessagefiles")
+
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Set("gorm", repositories.Database) // Assuming "gorm" is the key used to store the database connection
@@ -43,10 +45,13 @@ func main() {
 	})
 
 	e.GET("/", handlers.HomeHandler)
-	e.GET("/login", handlers.LoginPageRender)                                   // Render the login page when /login is accessed
-	e.POST("/login/check", handlers.LoginChecker(repositories.Database, store)) // Login checker (for form submission)
+	e.GET("/login", handlers.LoginPageRender)
+	e.POST("/login/check", handlers.LoginChecker(repositories.Database, store))
 	e.GET("/register", handlers.RenderRegistrationPage)
 	e.POST("/register", handlers.HandleRegistration(repositories.Database))
+	e.GET("/logout", handlers.LogoutHandler(store))
+	e.POST("/createpost", handlers.CreatePostHandler)
+	e.GET("/createpost", handlers.CreatePostPageRender)
 	e.Logger.Fatal(e.Start(":1324"))
 }
 

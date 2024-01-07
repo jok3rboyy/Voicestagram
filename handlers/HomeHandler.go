@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/jok3rboyy/VoiceStagram1/types"
@@ -38,9 +39,15 @@ func HomeHandler(c echo.Context) error {
 	var voicemessages []types.Post
 	result := db.Where("username = ?", username).Find(&voicemessages)
 	if result.Error != nil {
+		log.Printf("Error retrieving voicemessages: %v", result.Error)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving voicemessages")
 	}
 
 	// Display voicemessages on the home page
-	return c.Render(http.StatusOK, "home.gohtml", map[string]interface{}{"Voicemessages": voicemessages, "IsLoggedIn": true})
+	log.Printf("Number of Voicemessages: %d", len(voicemessages))
+	return c.Render(http.StatusOK, "home.gohtml", map[string]interface{}{
+		"IsLoggedIn":    true,
+		"Username":      username,
+		"Voicemessages": voicemessages,
+	})
 }

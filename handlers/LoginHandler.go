@@ -61,3 +61,29 @@ func LoginChecker(db *gorm.DB, store *sessions.CookieStore) echo.HandlerFunc {
 		return c.Redirect(http.StatusSeeOther, "/")
 	}
 }
+
+// LogoutHandler handles user logout
+func LogoutHandler(store *sessions.CookieStore) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// Get the session
+		session, err := store.Get(c.Request(), "session")
+		if err != nil {
+			// Handle session retrieval error
+			return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving session")
+		}
+
+		// Clear session data
+		session.Values["token"] = ""
+		session.Values["Username"] = ""
+		session.Options.MaxAge = -1
+
+		// Save the cleared session
+		if err := session.Save(c.Request(), c.Response().Writer); err != nil {
+			// Handle session save error
+			return echo.NewHTTPError(http.StatusInternalServerError, "Error saving session")
+		}
+
+		// Redirect to the login page
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
+}
