@@ -9,32 +9,30 @@ import (
 	"gorm.io/gorm"
 )
 
-// RenderRegistrationPage renders the registration page
+// RenderRegistrationPage renderd de registratie pagina
 func RenderRegistrationPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "register.gohtml", nil)
 }
 
-// HandleRegistration handles the registration process
+// HandleRegistration is het handlen van de registratie dngen
 func HandleRegistration(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Get form values
+
 		username := c.FormValue("username")
 		password := c.FormValue("password")
 
-		// Your validation logic...
-
-		// Create a new user
+		// Create een user
 		user := types.User{
 			Username: username,
 		}
 
-		// Save the user to the database (including password hashing)
+		// Sla de user op in de database
 		if err := repositories.CreateUser(db, &user, password); err != nil {
-			// Handle error...
+			// Handle error
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user")
 		}
 
-		// Redirect to the login page or any other page
+		// ga naar login pagina
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 }

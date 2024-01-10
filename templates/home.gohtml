@@ -33,10 +33,10 @@
         {{ if .IsLoggedIn }}
         <h2>hey! {{ .Username }} wat leuk dat je er bent :] </h2>
         {{ range .Voicemessages }}
-        <div>
-            <p>Voice Message: <audio controls><source src="{{ .VoiceMessage }}" type="audio/wav"></audio></p>
-        </div>
-    {{ end }}
+            <div>
+                <p>Voice Message: <audio controls><source src="uploads/{{ .VoiceMessage }}" type="audio/wav"></audio></p>
+            </div>
+        {{ end }}
     {{ end }}
 
 
@@ -45,4 +45,3 @@
         </main>
         </body>
         </html>
-        

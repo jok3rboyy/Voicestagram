@@ -5,24 +5,23 @@ import (
 	"gorm.io/gorm"
 )
 
-// VoiceMessageRepository represents a repository for VoiceMessage operations
 type VoiceMessageRepository struct {
 	db *gorm.DB
 }
 
-// NewVoiceMessageRepository creates a new VoiceMessageRepository
+// NewVoiceMessageRepository maakt een nieuwe VoiceMessageRepository aan.
 func NewVoiceMessageRepository(db *gorm.DB) *VoiceMessageRepository {
 	return &VoiceMessageRepository{db: db}
 }
 
-// CreateVoiceMessage creates a new voice message in the database
+// CreateVoiceMessage maakt een nieuwe voicemessage aan in de database.
 func (r *VoiceMessageRepository) CreateVoiceMessage(voiceMessage *types.Post) error {
 	return r.db.Create(voiceMessage).Error
 }
 
-// GetVoiceMessagesByUserID returns all voice messages for a specific user from the database
-func (r *VoiceMessageRepository) GetVoiceMessagesByUserID(userID uint) ([]types.Post, error) {
+// GetVoiceMessagesByUsername pakt alle voicemessages van een bepaalde user
+func (r *VoiceMessageRepository) GetVoiceMessagesByUsername(username string) ([]types.Post, error) {
 	var voiceMessages []types.Post
-	err := r.db.Where("user_id = ?", userID).Find(&voiceMessages).Error
+	err := r.db.Where("username = ?", username).Find(&voiceMessages).Error
 	return voiceMessages, err
 }
