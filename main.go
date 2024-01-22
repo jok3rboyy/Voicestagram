@@ -44,6 +44,7 @@ func main() {
 		Master:       "/master",
 	})
 
+	//main
 	e.GET("/", handlers.HomeHandler)
 	e.GET("/login", handlers.LoginPageRender)
 	e.POST("/login/check", handlers.LoginChecker(repositories.Database, store))

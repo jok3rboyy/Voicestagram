@@ -16,13 +16,13 @@ func LoginPageRender(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.gohtml", nil)
 }
 
-// LoginChecker handles user login
+// check login functie
 func LoginChecker(db *gorm.DB, store *sessions.CookieStore) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")
 
-		// Retrieve user from the database
+		// pak de user uit de database
 		var user types.User
 		result := db.Where("username = ?", username).First(&user)
 		if result.Error != nil {
@@ -30,60 +30,58 @@ func LoginChecker(db *gorm.DB, store *sessions.CookieStore) echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid username or password")
 		}
 
-		// Check if the password matches
+		// kijk of de password klopt
 		err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil {
 			fmt.Println("Password comparison error:", err)
 			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid username or password")
 		}
 
-		// Generate a session token
+		// maak een session token
 		sessionToken := uuid.New().String()
 
-		// Get the session
+		// pak de session
 		session, err := store.Get(c.Request(), "session")
 		if err != nil {
 			fmt.Println("Error retrieving session:", err)
 			return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving session")
 		}
 
-		// Set the session token in the session
+		// zet de sessie token en username in de sessie
 		session.Values["token"] = sessionToken
 		session.Values["Username"] = username
 
-		// Save the session
+		// sla dat op
 		if err := session.Save(c.Request(), c.Response().Writer); err != nil {
 			fmt.Println("Error saving session:", err)
 			return echo.NewHTTPError(http.StatusInternalServerError, "Error saving session")
 		}
 
-		// Redirect to the home page
+		// Redirect naar home
 		return c.Redirect(http.StatusSeeOther, "/")
 	}
 }
 
-// LogoutHandler handles user logout
+// LogoutHandler zorgt dat je ook kan uitloggen
 func LogoutHandler(store *sessions.CookieStore) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Get the session
+		// pak sessie
 		session, err := store.Get(c.Request(), "session")
 		if err != nil {
-			// Handle session retrieval error
 			return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving session")
 		}
 
-		// Clear session data
+		// zet de token en username op ""
 		session.Values["token"] = ""
 		session.Values["Username"] = ""
 		session.Options.MaxAge = -1
 
-		// Save the cleared session
+		// sla de sessie op die leeg is
 		if err := session.Save(c.Request(), c.Response().Writer); err != nil {
-			// Handle session save error
 			return echo.NewHTTPError(http.StatusInternalServerError, "Error saving session")
 		}
 
-		// Redirect to the login page
+		// Redirect naar login
 		return c.Redirect(http.StatusSeeOther, "/login")
 	}
 }

@@ -16,57 +16,57 @@ func CreatePostPageRender(c echo.Context) error {
 	return c.Render(http.StatusOK, "createpost.gohtml", nil)
 }
 func CreatePostHandler(c echo.Context) error {
-	// Retrieve the logged-in user's username from the session
+	// pak sessie
 	sess, err := session.Get("session", c)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving session")
 	}
 
-	// Check if the session token is present
+	// kijk of er een token is
 	if sess.Values["token"] == nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "User not logged in")
 	}
 
-	// Retrieve the username from the session
+	// pak de username uit de sessie
 	username, ok := sess.Values["Username"].(string)
 	if !ok {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error retrieving username from session")
 	}
 
-	// Parse form data
-	err = c.Request().ParseMultipartForm(10 << 20) // 10 MB limit
+	// parse de form data
+	err = c.Request().ParseMultipartForm(10 << 20) // 10 MB max
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Error parsing form data")
 	}
 
-	// Retrieve the voice message file
+	// pak de voicefile uit de form data
 	file, _, err := c.Request().FormFile("voiceMessage")
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Error retrieving voice message file")
 	}
 	defer file.Close()
 
-	// Create a unique filename based on username and timestamp
+	//  maak een filepath die anders is per user en per tijd
 	filePath := "C:\\Users\\twanm\\reposSchool\\Voicestagram\\Voicemessagefiles\\" + username + "_" + time.Now().Format("20060102150405") + ".wav"
 
-	// Create or open the file on the server
+	// creeer een file op de server op basis van de filepath
 	outFile, err := os.Create(filePath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error creating voice message file")
 	}
 	defer outFile.Close()
 
-	// Copy the contents of the uploaded file to the newly created file on the server
+	// gooi deze content in de file die we net hebben gemaakt
 	_, err = io.Copy(outFile, file)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error saving voice message file")
 	}
 
-	// Create a new post in the database with the file path
+	// maak een post aan met de juiste data
 	newPost := types.Post{
 		Username:             username,
-		VoiceMessage:         filePath, // Store the file path in the database
-		VoiceMessageFilePath: filePath, // Also store the file path in a separate field if needed
+		VoiceMessage:         filePath,
+		VoiceMessageFilePath: filePath,
 	}
 
 	db, ok := c.Get("gorm").(*gorm.DB)
@@ -79,6 +79,6 @@ func CreatePostHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error creating post")
 	}
 
-	// Redirect to the home page or handle the response as needed
+	// ga terug naar de homepagina
 	return c.Redirect(http.StatusSeeOther, "/")
 }
