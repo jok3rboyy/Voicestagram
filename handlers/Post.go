@@ -47,10 +47,10 @@ func CreatePostHandler(c echo.Context) error {
 	defer file.Close()
 
 	//  maak een filepath die anders is per user en per tijd
-	filePath := "C:\\Users\\twanm\\reposSchool\\Voicestagram\\Voicemessagefiles\\" + username + "_" + time.Now().Format("20060102150405") + ".wav"
+	filePath := username + "_" + time.Now().Format("20060102150405") + ".wav"
 
 	// creeer een file op de server op basis van de filepath
-	outFile, err := os.Create(filePath)
+	outFile, err := os.Create("C:\\Users\\twanm\\reposSchool\\Voicestagram\\Voicemessagefiles\\" + filePath)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Error creating voice message file")
 	}
